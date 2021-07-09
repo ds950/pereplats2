@@ -1,0 +1,327 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+    <script src="js/jquery.autocomplete.pack.js"></script>
+    <script src="js/jquery.autocomplete.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="js/datepicker-ru.js"></script>
+    <!--<script type="text/javascript">
+        if (window.jQuery) alert("jQuery подключен");
+        else alert("jQuery не подключен");
+    </script>-->
+    <script>
+        $( function() {
+            $( ".date" ).datepicker();
+            $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        } );
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            var date = new Date();
+
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+
+            var today = year + "-" + month + "-" + day;
+            $("#add3date").attr("value", today);
+        });
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Работа с переплатами/недоплатами</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{PFIO}}</p>
+    <input style="padding: 10px"
+           type="submit" class="button button1" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div>
+    <form style="text-align: center; background-color: #d6d8e3" method="post" action="/add3create" name="data">
+        <h2 align="center" style="color: #2e2c91">Формирование решения о взыскании сумм пенсии,<br> излишне выплаченных
+            пенсионеру</h2>
+        <input type="hidden" name="pensid" id="pensid" value="{{PENSID}}">
+        <input type="hidden" name="uprcode" id="uprcode" value="{{ucode}}">
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Введите дату решения:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content date" id="add3date" type="text" name="add3date" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible">
+                    <p style="font-weight:bold">Заполните, пожалуйста нужный блок:</p>
+                    <p id="radio1"><input name="blocks" type="radio" id="blocks1" class="radio-button" value="1">Блок 1.
+                        Добровольное возмещение
+                        <input class="radio-button" name="blocks" value="2" type="radio" id="blocks2">Блок 2. Удержание</p>
+                    <script>
+                        $('#blocks1').click(function () {
+                            $('#invisible').removeClass("style1");
+                            $('#invisible1').addClass("style1");
+                        });
+                    </script>
+                    <script>
+                        $('#blocks2').click(function () {
+                            $('#invisible1').removeClass("style1");
+                            $('#invisible').addClass("style1");
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <div id="invisible" class="style1" style="text-align: center; background-color: #d6d8e3">
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible">
+                        <p>Блок 1. Добровольное возмещение излишне выплаченных сумм пенсии</p>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        ФИО:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input value="{{ADD3FIO}}" id="block1fio" type="text" name="block1fio" style="text-align: center; width: 100%"/>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                         Регистрационный номер заявления:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input class="content" id="block1num" type="text" name="block1num" style="width: 200px"/>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        Дата приема заявления:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input class="content date" id="block1date" type="text" name="block1date" style="width: 200px"/>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        СНИЛС:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input value="{{ADD3SNILS}}" readonly class="content" id="block1snl" type="text" style="width: 110px; text-align: center" name="block1snl" placeholder="___-___-___ __"/>
+                        <script>
+                            $(function () {
+                                //Использование параметра completed
+                                $("#block1snl").mask("999-999-999 99", {});
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        Номер выплатного дела:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input value="{{ADD3NVD}}" class="content" id="block1vd" type="text" name="block1vd"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div id="invisible1" class="style1" style="text-align: center; background-color: #d6d8e3">
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible">
+                        Блок 2. Сведения, имеющиеся в распоряжении территориального органа Пенсионного фонда
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        ФИО:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input id="block2fio" value="{{ADD3FIO}}" type="text" name="block2fio" style="text-align: center; width: 100%"/>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        СНИЛС:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input class="content" value="{{ADD3SNILS}}" style="width: 110px; text-align: center" id="block2snl" type="text" name="block2snl" placeholder="___-___-___ __"/>
+                        <script>
+                            $(function () {
+                                //Использование параметра completed
+                                $("#block2snl").mask("999-999-999 99", {});
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        Номер выплатного дела:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input value="{{ADD3NVD}}" class="content" id="block2vd" type="text" name="block2vd"/>
+                    </div>
+                </div>
+            </div>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        Введите статью законодательного акта:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input type="text" name="klass" id="klass" style="text-align: center; width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+            <div class="table">
+                <div class="table-row">
+                    <div class="table-cell-invisible-left">
+                        Вид пенсии:
+                    </div>
+                    <div class="table-cell-invisible-right">
+                        <input value="{{ADD3VP}}" type="text" name="block3vp" id="block3vp" style="text-align: center; width: 100%;" required/>
+                    </div>
+                </div>
+            </div>
+        <br>
+            <div  id="optional">
+                <div class="table">
+                    <div class="table-row">
+                        <div class="table-cell-invisible">
+                            Заполняется опционально (при добровольном возмещении)
+                        </div>
+                    </div>
+                </div>
+                <div class="table">
+                    <div class="table-row">
+                        <div class="table-cell-invisible-left">
+                            Производить удержание с:
+                        </div>
+                        <div class="table-cell-invisible-right">
+                            <input class="content date" id="block3date" type="text" name="block3date"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="table">
+                    <div class="table-row">
+                        <div class="table-cell-invisible-left">
+                            Размер (процент или твердая сумма):
+                        </div>
+                        <div class="table-cell-invisible-right">
+                            <label>
+                                <input class="optional" value="" id="block3razmer" type="number" name="block3razmer" placeholder="Процент"/>
+                                <input id="block3razmertverd" type="number" class="optional" value="" name="block3razmertverd" placeholder="Твердая сумма"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    let f = document.getElementById('block3razmer');
+                    let s = document.getElementById('block3razmertverd');
+                    f.addEventListener('keyup', function() {
+                        if (f.value == '') {
+                            s.disabled = false;
+                        }else{
+                            s.disabled = true;
+                        }
+                    });
+                    s.addEventListener('keyup', function() {
+                        if (s.value == '') {
+                            f.disabled = false;
+                        }else{
+                            f.disabled = true;
+                        }
+                    });
+                </script>
+            </div>
+        <input type="hidden" name="add6exist" id="add6exist" value="true">
+        <input type="hidden" name="tel" id="tel" value="{{T}}">
+        <input type="hidden" name="upr" id="upr" value="{{U}}">
+        <input type="hidden" name="upradress" id="upradress" value="{{UA}}">
+        <input type="hidden" name="uprfull" id="uprfull" value="{{UF}}">
+        <input type="hidden" name="uprisp" id="uprisp" value="{{USF}}">
+        <input type="hidden" name="uprnach" id="uprnach" value="{{UN}}">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
+            <br>
+        <button style="padding: 10px" class="button button1" type="submit"
+                onclick="if (getElementById('add3date').value==='' || getElementById('add3upr').value==='' || getElementById('block3vp').value==='' || getElementById('klass').value==='' || getElementById('block3date').value==='') {alert('Заполните все поля'); return false;} else submit(alert('Данные успешно сохранены'));">
+            Сохранить в базе
+        </button>
+    </form>
+</div>
+    <hr>
+    <form style="text-align: center" action="/main">
+        <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+    </form>
+</div>
+</form>
+</body>
+</html>

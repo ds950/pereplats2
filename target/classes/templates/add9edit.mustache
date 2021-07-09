@@ -1,0 +1,277 @@
+<html>
+<head>
+    <style>
+        table{
+            text-align: center;
+            margin: auto;
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        tr{
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        td{
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+    </style>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="js/datepicker-ru.js"></script>
+    <script>
+        $( function() {
+            $( ".date" ).datepicker();
+            $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        } );
+    </script>
+    <script type="text/javascript">
+        $(document).ready(
+                function () {
+                    // $("input").each(function() {
+                    if ($("#validation").val() === "false") {
+
+                        alert("Документ не был ранее сформирован!/n Возвращаем Вас назад ");
+                        location.href = "/editvariants";
+                    } else {
+                        alert("Данные по пенсионеру найдены!")
+                    }
+                });
+    </script>
+    <script>
+        $(document).ready(
+                function () {
+                    $("#add9rukdolzh").change(function () {
+
+                        // $("input").each(function() {
+
+                        if ($("#add9rukdolzh").val() === "Начальник Управления") {
+                            $("#add9rukfio").attr("value", "ЗАБАРА В.И.");
+                        } else {
+                            $("#add9rukfio").removeAttr("value");
+                            $("#add9rukfio").attr("value", "НАГОРНАЯ Е.А.");
+                        }
+                        //  });
+
+
+                    });
+                });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#submbtn").onclick(function () {
+                if ($("#fio").val() === '' ||
+                        $("#add9raspnadp").val() === '' ||
+                        $("#add9rukdolzh").val() === '' ||
+                        $("#add9rukfio").val() === '' ||
+                        $("#add9protdate").val() === '' ||
+                        $("#add9vv").val() === '' ||
+                        $("#add9date1").val() === '' ||
+                        $("#add9date2").val() === '' ||
+                        $("#add9summrub").val() === '' ||
+                        $("#add9prich").val() === '' ||
+                        $("#add9provdolzh").val() === '' ||
+                        $("#add9provfio").val() === '' ||
+                        $("#add9proizvdolzh").val() === '' ||
+                        $("#add9proizvfio").val() === '') {
+                    alert('Заполните все поля');
+                    return false;
+                } else submit(alert("Данные успешно сохранены"));
+            });
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Здравствуйте!</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{PFIO}}</p>
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <input type="hidden" id="validation" name="validation" value="{{VALID}}">
+    <form method="post" action="/add9edit" name="data">
+        <h2 align="center" style="color: #2e2c91">Редактирование протокола о выявлении<br> излишне выплаченных
+            пенсионеру сумм пенсии</h2>
+        <input type="hidden" name="pensid" id="pensid" value="{{ID}}">
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Распорядительная надпись:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" value="{{ADD9RASPNADP}}" type="text" name="add9raspnadp" id="add9raspnadp" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Должность руководителя:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <select type="text" id="add9rukdolzh" name="add9rukdolzh" style="text-align: center" required>
+                        <option value="{{ADD9RUKDOLZH}}" style="text-align: center" disabled selected>{{ADD9RUKDOLZH}}</option>
+                        <option value="Начальник Управления" style="text-align: center">Начальник Управления</option>
+                        <option value="Заместитель Начальника Управления" style="text-align: center">Заместитель начальника</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    ФИО руководителя:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input type="text" class="content" style="text-align: center" id="add9rukfio" value="{{ADD9RUKFIO}}" name="add9rukfio" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Дата протокола:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input value="{{ADD9PROTDATE}}" class="content date" type="text" id="add9protdate" name="add9protdate" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Выявил факт излишней выплаты:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input value="{{ADD9VV}}" type="text" name="add9vv" id="add9vv" style="text-align: center; width: 100%" required>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    <label> Период с: <input class="content" value="{{ADD9DATE1}}" type="text" name="add9date1" id="add9date1" required/></label>
+                </div>
+                <div class="table-cell-invisible-right">
+                    <label> Период до: <input class="content" value="{{ADD9DATE2}}" type="text" name="add9date2" id="add9date2" required/></label>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Сумма рублей:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" value="{{ADD9SUMMRUB}}" type="text" min="0" name="add9summrub" id="add9summrub" style="text-align: center; width: 100px" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible">
+                    <label id="vin">Виновник... <input name="add9mistakeauthor" type="radio" value="УПФР">УПФР <input name="add9mistakeauthor" type="radio" value="ПЕНСИОНЕР">Пенсионер</label>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Причина образования ИВСП:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" value="{{ADD9PRICH}}" type="text" name="add9prich" id="add9prich" style="width: 100%" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    <h4>Проверяющий</h4>
+                </div>
+                <div class="table-cell-invisible-right">
+                    <h4>Произвел расчет</h4>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Должность: <input class="content" value="{{ADD9PD}}" type="text" name="add9provdolzh" id="add9provdolzh" style="text-align: center" required/>
+                </div>
+                <div class="table-cell-invisible-right">
+                    Должность: <input value="{{ADD9PZD}}" class="content" type="text" name="add9proizvdolzh" style="text-align: center" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    ФИО:<input value="{{ADD9PF}}" style="text-align: center" class="content" type="text" name="add9provfio" id="add9provfio" required/>
+                </div>
+                <div class="table-cell-invisible-right">
+                    ФИО :<input value="{{ADD9PZF}}" class="content" type="text" name="add9proizvfio" style="text-align: center" id="add9proizvfio" required/>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <br>
+        <button style="padding: 10px" id="submbtn" class="button button1" type="submit">Сохранить изменения</button>
+    </form>
+</div>
+<hr>
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

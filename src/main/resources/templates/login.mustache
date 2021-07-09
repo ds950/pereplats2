@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        hr {
+            width: 100%;
+            color: #848484;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Verdana", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            border-radius: 4px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+        .table {
+            vertical-align: middle;
+            margin: auto;
+            text-align: center;
+            width: 20%;
+            display: table;
+        }
+        .table-row {
+            padding: auto;
+            vertical-align: middle;
+            text-align: center;
+            width: 100%;
+            height: 30px;
+            display: table-row;
+        }
+        .table-cell-invisible-left {
+            padding-right: 5px;
+            vertical-align: middle;
+            text-align: right;
+            width: 50%;
+            display: table-cell;
+        }
+        .table-cell-invisible-right {
+            padding-left: 5px;
+            vertical-align: middle;
+            text-align: left;
+            width: 50%;
+            display: table-cell;
+        }
+    </style>
+    <title>Вход в учетную запись </title>
+</head>
+<body style="background-color: #d6d8e3">
+<h1  style="color: #2e2c91; text-align: center">Вход в учетную запись пользователя</h1>
+<hr>
+<div style="margin: auto; border:1px solid #d6d8e3; text-align: center">
+    <form action="/login" method="post">
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Логин:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input style="text-align: center" type="text" name="username"/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Пароль:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input style="text-align: center" type="password" name="password"/>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <br>
+        <div><input class="button button1" type="submit" value="Войти"/></div>
+    </form>
+</div>
+<hr>
+<div style="text-align: center">
+    <form action="/login">
+        <button formaction="/" class="button button1" type="submit">Назад</button>
+    </form>
+</div>
+</body>
+</html>

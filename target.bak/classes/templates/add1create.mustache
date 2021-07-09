@@ -1,0 +1,350 @@
+<html>
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Times+New+Roman:400,600&subset=latin,cyrillic);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            border-radius: 4px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+</head>
+<body style="background-color: #d6d8e3">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+<script>
+    $(function () {
+        //Использование параметра completed
+        $("#snls").mask("999-999-999 99", {});
+    });
+</script>
+<script>
+    $(document).ready(function () {
+
+        function calcControlSummSnils(snls) {
+            // Проверка суммы
+
+
+            function checkSumm(s) {
+                if (s < 10) {
+                    return "0" + s;
+                }
+                if (s < 100) {
+                    return s;
+                }
+                if (s === 100 || s === 101) {
+                    return "00";
+                }
+                if (s > 101) {
+                    return checkSumm(s % 101);
+                }
+            }
+
+            // Расчёт суммы
+            var summ = 0;
+            for (var i = 0; i < 9; i++) {
+                summ += (9 - i) * parseInt(snls[i]);
+            }
+            console.log(summ);
+            return checkSumm(summ);
+        }
+
+        // Перевод массива в строку
+
+
+        function arr2str(arr) {
+            var str = "";
+            for (var i = 0; i < arr.length; i++) {
+                str += arr[i];
+            }
+            return str;
+        }
+
+        // Убирает из строки лишние символы - возврат массива цифр
+
+
+        function validateSnils(str) {
+            var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            var correctStr = [];
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] in digits) {
+                    correctStr.push(parseInt(str[i]));
+                }
+            }
+            //console.log(correctStr);
+            return arr2str(correctStr);
+        }
+
+        // Проверка на совпадание контрольной суммы
+
+
+        function checkSnils(snls) {
+            if (parseInt(calcControlSummSnils(snls.substring(0, 9))) === parseInt(snls.substring(9, 11))) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //
+
+        function showAlertMain(str, type) {
+            $('#snilsInfo').html(str);
+        }
+
+        $('#snls').bind('blur', function () {
+            $("#alertDiv").remove();
+            snls = validateSnils($("#snls").val());
+            //correctSnils = []; // Список потенциально правильных корректных СНИЛСов
+            switch (snls.length) {
+                case 9: {
+                    console.warn("Не полный номер");
+                    temp = snls + calcControlSummSnils(snls);
+                    //correctSnils.push(temp);
+                    showAlertMain("В номере нет контрольного числа!", "block");
+                    break;
+                }
+                case 11: {
+                    console.log("Обработка");
+                    if (checkSnils(snls)) {
+                        showAlertMain('Введён корректный номер СНИЛС!', "success");
+                    } else {
+                        showAlertMain('<div style="color: crimson">СНИЛС не корректен</div>', "success");
+                        var temp = snls.substring(0, 9) + calcControlSummSnils(snls.substring(0, 9));
+                    }
+                    break;
+                }
+                default: {
+                    console.warn("Не правильный номер СНИЛС");
+                    showAlertMain('Введён не корректный номер СНИЛС!', "error");
+                    break;
+                }
+            }
+        });
+    });
+</script>
+<h1 align="center" style="color: crimson">Работа с переплатами/недоплатами</h1>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 5px" type="submit" value="Выйти"/>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<nav>
+    <ul class="topmenu">
+        <li><a href="" class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+                <li><a href="/pereplats">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a href="">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add1create">Формирование - решение об обнаружении ошибки<span
+                                        class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add2create">Формирование - протокол о выявлении излишне выплаченных сумм
+                                    пенсии<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add5create">Формирование - извещение пенсионеру об образовавшейся сумме
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+                            </ul>
+                        <li><a href="/pmis">Ошибка пенсионера >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add3create">Формирование - решение о взыскании сумм пенсии, излишне
+                                    выплаченных пенсионеру<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add6create">Формирование - извещение пенсионеру об установленном факте
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+
+                            </ul>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form method="post" action="/add1create">
+        <h2 align="center" style="color: crimson">Формирование решения об обнаружении ошибки, допущенной при
+            установлении (выплате)</h2>
+        <label>Введите дату решения <input id="resh_date" type="date" name="resh_date"/></label><br><br>
+        <label>Выберите в каком районе находится управление ПФР <select type="text" name="add1_upr"
+                                                                        style="text-align: center"><br>
+            {{#upr}}
+                <option value="{{upr}}" title="Выберите управление" style="text-align: center">{{upr}}</option>
+            {{/upr}}
+        </select></label><br><br>
+        <label>Выберите вид пенсионного действия <select type="text" name="add1_vpd">
+            {{#vpd}}
+                <option value="{{vpd}}" title="Выберите ВПД">{{vpd}}</option>
+            {{/vpd}}
+        </select></label><br><br>
+        <label>Введите ФИО пенсионера: <select id="fio" type="text" name="fio" style="text-align: center">
+            {{#pensioner}}
+                <option value="{{fio}}" title="Выберите пенсионера" style="text-align: center">{{fio}}</option>
+            {{/pensioner}}
+        </select></label><br><br>
+        <label>Введите СНИЛС <input style="width: 110px; text-align: center" id="snls" type="text" name="snls"
+                                    placeholder="___-___-___ __" onblur=""></label>
+        <p id="snilsInfo"></p>
+        <label>Введите номер выплатного дела: <input type="text" style="width: 50px; text-align: center"
+                                                     name="resh_vdnum" id="resh_vdnum"/></label><br><br>
+        <label>Введите описание ошибки: <input type="text" style="width: 300px; text-align: center" name="opis_mistake"
+                                               id="opis_mistake"/></label><br><br>
+        <label>Введите дату, с которой пенсия установлена с ошибкой: <input id="mis_date" type="date" name="mis_date"/></label><br><br>
+        <label>Решил в соответствии c... <select type="text" name="statja" style="text-align: center">
+            {{#klass}}
+                <option value="{{statja}}" style="text-align: center">{{uslovie}} {{statja}}</option>
+            {{/klass}}
+        </select></label><br><br>
+        <label>Устранить данную ошибку в размере... <select id="add1_vip_razn" type="text" name="add1_vip_razn"
+                                                            style="text-align: center">
+            {{#add4}}
+                <option value="{{vip_razn}}" title="Выберите пенсионера"
+                        style="text-align: center">{{vip_razn}}</option>
+            {{/add4}}
+        </select></label><br><br>
+        <label>Начальник УПФР <select id="upr_nach" type="text" name="upr_nach" style="text-align: center">
+            {{#upr}}
+                <option value="{{upr_nach}}" title="Выберите пенсионера" style="text-align: center">в {{upr}} районе
+                    - {{upr_nach}}</option>
+            {{/upr}}
+        </select></label><br><br>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <button style="padding: 10px" class="button button1" type="submit">Добавить Решение</button>
+    </form>
+</div>
+
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center;">
+
+    <form action="/getAdd1File.docx">
+        <select id="add1_resh" name="add1_resh" style="text-align: center">
+            {{#add1}}
+                <option value="{{num}}" title="Выберите пенсионера" style="text-align: center">№ {{num}}
+                    - {{fio}}</option>
+            {{/add1}}
+        </select>
+        <button class="button button1" type="submit" style="text-align: center">Решение об обнаружении ошибки,
+            допущенной<br/>при установлении (выплате) пенсии
+        </button>
+        <br><br>
+    </form>
+</div>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px;" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

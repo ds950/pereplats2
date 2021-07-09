@@ -1,0 +1,198 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="js/jquery.autocomplete.pack.js"></script>
+    <script src="js/jquery.autocomplete.js"></script>
+    <script src="js/unique_values.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="js/datepicker-ru.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".date" ).datepicker();
+            $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        })
+    </script>
+    <script>
+        $(function () {
+            //Использование параметра completed
+            $("#snls").mask("999-999-999 99", {});
+        });
+    </script>
+    <script src="/js/months.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#fio").autocomplete("/findbyfio" + "#fio", {
+                selectFirst: true,
+                delay: 100,
+                minChars: 0,
+                max: 50,
+                scrollHeight: 300
+            });
+            $("#fio").blur(function () {
+                $.ajax({
+
+                    url: "/findbyfio" + "#fio",
+                    data: {fio: $("#fio").val()},
+                    success: function (html) {
+                        $("#vdnum").val(html.nvd);
+                        $("#pens_adress").val(html.adress);
+                        $("#vp").val(html.vp);
+                    }
+
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#fio_search").autocomplete("/findadd4byfio" + "#fio_search", {
+                selectFirst: true,
+                delay: 100,
+                minChars: 0,
+                max: 50,
+                scrollHeight: 300
+            });
+            $("#fio_search").blur(function () {
+                $.ajax({
+
+                    url: "/findadd4byfio" + "#fio_search",
+                    data: {fio: $("#fio_search").val()},
+                    success: function (html) {
+                        $("#month1").val(html.vip_his_month);
+                        $("#month2").val(html.vip_his_month);
+                    }
+
+                });
+            });
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+    <script>
+        function finalresult () {
+            var sum = 0;
+            $(".monthRowAdd").each(function () {
+                sum += parseFloat($(this).find('input[name="vip_razn"]').val());
+
+            });
+            sum = (Math.round(sum*100))/100;
+            $("#result_final").val(sum);
+            sum = sum.toFixed(2);
+            console.log(sum)
+        }
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+
+<h1 align="center" style="color: #2e2c91">Работа с переплатами/недоплатами</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{PFIO}}</p>
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <div>
+        <form method="post" action="/pereplats">
+            <h2 align="center" style="color: #2e2c91">Расчет переплат/недоплат</h2>
+            <input value="{{UPRAVLENIE}}" type="hidden" name="upr" id="upr"/>
+            <input value="{{ID}}" type="hidden" name="pensid" id="pensid"/>
+            <div class="fieldContainer" id="fcontent">
+
+                    <div class="row monthRowAdd" id="row0">
+                        <div class="monthField">
+                        <input id="viphismonth0" class="date" type="text" name="viphismonth" placeholder="Дата выплаты"
+                                  required>
+                        <script id="funct0">
+                            function addition0() {
+                                var vip_summ0 = parseFloat(document.getElementById('vip_summ0').value);
+                                var nach_summ0 = parseFloat(document.getElementById('nach_summ0').value);
+
+                                if (isNaN(vip_summ0) === true) vip_summ0 = 0;
+                                if (isNaN(nach_summ0) === true) nach_summ0 = 0;
+
+                                var vip_razn0 = vip_summ0 - nach_summ0;
+                                vip_razn0 = vip_razn0.toFixed(2);
+                                document.getElementById('result0').value = vip_razn0;
+                            }
+                        </script>
+                        </div>
+                        <div class="monthField">
+                            <input id="vip_summ0" type="text"  name="vip_summ" style="text-align: center; width: 200px" placeholder="Выплаченная сумма" required/>
+                        </div>
+                        <div class="monthField">
+                            <input id="nach_summ0" name="nach_summ" type="text" min="0" style="text-align: center" placeholder="Начисленная сумма" required>
+                        </div>
+                        <div class="monthField">
+                            <input class="button button1" type="button" value="Рассчитать" onclick="addition0();"><a> </a>
+                        </div>
+                            <div class="monthField">
+                                <input value="0,00" readonly style="text-align: center" id="result0" name="vip_razn" type="text"/>
+                            </div>
+                        <div class="monthField">
+                            <button type="button" id="0" class="btn btn-danger btn-lg removeBtn" style="color: red"><b>X</b>
+                        </button>
+                        </div>
+                </div>
+            </div>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+            <br>
+            <input style="text-align: center; margin-top: 3px; margin-bottom: 3px; padding: 3px" id="result_final" name="result_final" type="hidden"/><br>
+            <button type="button" id="addBtn" style="padding: 10px; color: green"
+                    class="btn btn-success btn-lg; button1"><b>+</b></button>
+            <input type="submit"
+                   onclick="if (getElementById('upr').value==='') {alert('Заполните все поля'); return false;} else submit(alert('Данные успешно сохранены')); finalresult()"
+                   style="padding: 10px" class="button button1" value="Внести в базу">
+        </form>
+
+    </div>
+</div>
+
+<hr>
+<div style="text-align: center" class="doc_form">
+    <form action="/main">
+        <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+    </form>
+</div>
+
+</body>
+</html>

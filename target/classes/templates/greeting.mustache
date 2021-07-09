@@ -1,0 +1,129 @@
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Verdana", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            border-radius: 4px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+    <title>Переплаты пенсий</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body style="background-color: #d6d8e3">
+<div><h1 style="color: #2e2c91" align="center">Переплаты пенсий</h1></div>
+
+<div style="margin: auto; width: 100px">
+    <form style="margin: auto" action="/main">
+        <button class="button button1" style="width: 100px; height: 50px; font-size: 18px" type="submit">Вход</button>
+    </form>
+</div>
+
+</body>
+</html>

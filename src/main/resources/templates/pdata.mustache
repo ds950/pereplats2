@@ -1,0 +1,326 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+    <script src="js/jquery.autocomplete.pack.js"></script>
+    <script src="js/jquery.autocomplete.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="js/datepicker-ru.js"></script>
+    <!--<script type="text/javascript">
+        if (window.jQuery) alert("jQuery подключен");
+        else alert("jQuery не подключен");
+    </script>-->
+    <script>
+        $(function () {
+            //Использование параметра completed
+            $("#snils").mask("999-999-999 99", {});
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            function calcControlSummSnils(snils) {
+                // Проверка суммы
+
+
+                function checkSumm(s) {
+                    if (s < 10) {
+                        return "0" + s;
+                    }
+                    if (s < 100) {
+                        return s;
+                    }
+                    if (s === 100 || s === 101) {
+                        return "00";
+                    }
+                    if (s > 101) {
+                        return checkSumm(s % 101);
+                    }
+                }
+
+                // Расчёт суммы
+                var summ = 0;
+                for (var i = 0; i < 9; i++) {
+                    summ += (9 - i) * parseInt(snils[i]);
+                }
+                console.log(summ);
+                return checkSumm(summ);
+            }
+
+            // Перевод массива в строку
+
+
+            function arr2str(arr) {
+                var str = "";
+                for (var i = 0; i < arr.length; i++) {
+                    str += arr[i];
+                }
+                return str;
+            }
+
+            // Убирает из строки лишние символы - возврат массива цифр
+
+
+            function validateSnils(str) {
+                var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+                var correctStr = [];
+                for (var i = 0; i < str.length; i++) {
+                    if (str[i] in digits) {
+                        correctStr.push(parseInt(str[i]));
+                    }
+                }
+                //console.log(correctStr);
+                return arr2str(correctStr);
+            }
+
+            // Проверка на совпадание контрольной суммы
+
+
+            function checkSnils(snils) {
+                if (parseInt(calcControlSummSnils(snils.substring(0, 9))) === parseInt(snils.substring(9, 11))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            //
+
+            function showAlertMain(str, type) {
+                $('#snilsInfo').html(str);
+            }
+
+            $('#snils').on("keyup", function () {
+                $("#alertDiv").remove();
+                snils = validateSnils($("#snils").val());
+                //correctSnils = []; // Список потенциально правильных корректных СНИЛСов
+                switch (snils.length) {
+                    case 9: {
+                        console.warn("Не полный номер");
+                        temp = snils + calcControlSummSnils(snils);
+                        //correctSnils.push(temp);
+                        showAlertMain('<div style="color: crimson">Нет контрольного числа</div>', "block");
+                        break;
+                    }
+                    case 11: {
+                        console.log("Обработка");
+                        if (checkSnils(snils)) {
+                            showAlertMain('<div style="color: darkgreen">СНИЛС корректен</div>', "success");
+                        } else {
+                            showAlertMain('<div style="color: crimson">СНИЛС не корректен</div>', "success");
+                            var temp = snils.substring(0, 9) + calcControlSummSnils(snils.substring(0, 9));
+                        }
+                        break;
+                    }
+                    default: {
+                        console.warn("Не правильный номер СНИЛС");
+                        showAlertMain('Введён не корректный номер СНИЛС!', "error");
+                        break;
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $('#loadptk').bind('click', function () {
+                $.ajax({
+
+                    url: "/findbyptksnl" + "#snils",
+                    data: {snils: $("#snils").val()},
+                    success: function (html) {
+                        $("#fam").val(html.fa);
+                        $("#im").val(html.im);
+                        $("#otch").val(html.ot);
+                        $("#fio").val(html.fa+" "+html.im+" "+html.ot);
+                        $("#adress").val(html.adrfakt.toUpperCase());
+                        $("#nvd").val(html.rnl.substr(0, 6));
+                    }
+
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $(".date").datepicker();
+                $.datepicker.setDefaults($.datepicker.regional["ru"]);
+            })
+        })
+    </script>
+</head>
+
+<body style="background-color: #d6d8e3">
+<script language="javascript" type="text/javascript">
+    function limitText(limitField, limitNum) {
+        if (limitField.value.length > limitNum) {
+            limitField.value = limitField.value.substring(0, limitNum);
+        }
+    }
+</script>
+<h1 align="center" style="color: #2e2c91">Ввод данных пенсионера</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 10px" class="button button1" id="logout" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <form method="post" action="/pdata">
+        <input type="hidden" name="uprcode" id="uprcode" value="{{UCODE}}"/>
+       <div class="table" style="text-align: center">
+           <div class="table-row">
+               <div class="table-cell">Введите СНИЛС пенсионера:</div>
+               <div class="table-cell">
+                   <input class="content" style="text-align: center" id="snils" type="text" name="snl" placeholder="___-___-___ __" required onkeyup=""></div>
+                 <div class="table-cell"><button id="loadptk" class="button button1">Загрузить из НВП</button></div>
+           </div>
+       </div>
+        <div class="table" style="text-align: center">
+            <div class="table-row">
+                <div class="table-cell-invisible">
+                <p id="snilsInfo">Проверка на правильность:</p>
+                </div>
+            </div>
+        </div>
+            <input type="hidden" name="fio" id="fio" required>
+        <div class="table" style="text-align: center">
+           <div class="table-row">
+                <div class="table-cell"><input class="content" style="text-align: center" type="text" name="fam"
+                                            placeholder="Фамилия" id="fam" required/></div>
+               <div class="table-cell"><input class="content" style="text-align: center" type="text" name="im"
+                                       placeholder="Имя" id="im" required/></div>
+               <div class="table-cell"><input class="content" style="text-align: center" type="text" name="otch"
+                                            placeholder="Отчество" id="otch" required/></div>
+           </div>
+        </div>
+        <div class="table" style="text-align: center">
+            <div class="table-row" style="vertical-align: middle">
+                <div class="table-cell-invisible">
+               <textarea rows="2" class="content" style="width: 100%; text-align: center" type="text" name="adress" placeholder="Адрес пенсионера" id="adress" required></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="table" style="text-align: center">
+            <div class="table-row" style="vertical-align: middle">
+                <div class="table-cell-invisible-left">
+                    Номер выплатного дела:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" style="width: 80px; text-align: center" type="text" id="nvd" name="nvd" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table" style="text-align: center">
+            <div class="table-row" style="vertical-align: middle">
+                <div class="table-cell-invisible-left">
+                    Порядковый номер пенсионера (для журнала):
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" style="width: 80px; text-align: center" type="text" id="pensnomer" name="pensnomer" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table" style="text-align: center">
+            <div class="table-row" style="vertical-align: middle">
+                <div class="table-cell-invisible-left">
+                    Выберите вид пенсии:
+                </div>
+                <div class="table-cell-invisible-right">
+                <select class="content" type="text" id="vp" name="vp" required
+                                                    style="text-align: center">
+                    <option value="" selected disabled style="color: #666666">Вид пенсии...</option>
+                    {{#vp}}
+                        <option value="{{vp}}" title="Выберите ВП">{{vp}}</option>
+                    {{/vp}}
+                    </select>
+                </div>
+                </div>
+        </div>
+        <div class="table" style="text-align: center">
+            <div class="table-row" style="vertical-align: middle">
+                <div class="table-cell-invisible-left">
+                    Выберите вид пенсионного действия:
+                </div>
+                <div class="table-cell-invisible-right">
+                <select class="content" type="text" id="vpd" name="vpd" required
+                                                                  style="text-align: center">
+                    <option value="" selected disabled style="color: #666666">Вид ПД...</option>
+                    {{#vpd}}
+                        <option value="{{vpd}}" title="Выберите ВПД">{{vpd}}</option>
+                    {{/vpd}}
+                </select>
+                </div>
+                </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Дата установления пенсии с ошибкой:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content date" type="text" id="calendar" name="calendar" required/>
+                </div>
+            </div>
+        </div>
+        <br>
+                    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <div style="text-align: center">
+                <button style="padding: 10px" class="button button1" type="submit"
+                onclick="if (getElementById('pensnomer').value==='' || getElementById('fio').value==='' || getElementById('snils').value==='' || getElementById('adress').value==='' || getElementById('vp').value==='' || getElementById('nvd').value==='' || getElementById('vp').value==='' || getElementById('vpd').value==='') {alert('Заполните все поля!'); return false;} else submit(alert('Данные успешно сохранены'));">
+                    Сохранить данные
+                </button>
+        </div>
+    </form>
+</div>
+
+<form style="text-align: center" action="/findallp">
+    <input style="padding: 10px" class="button button1" type="submit" value="Отобразить таблицу пенсионеров в базе">
+</form>
+<hr>
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="but ton button1" type="submit">На главную</button>
+</form>
+
+
+</body>
+</html>

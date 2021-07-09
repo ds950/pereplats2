@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Регистрация нового пользователя</title>
+    <style>
+        .button1 {
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            border-radius: 4px;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+</head>
+<body style="background-color: #d6d8e3">
+<div style="text-align: center">
+    <form action="/registration" method="post">
+        <div><label> Введите логин: <input type="text" name="username"/> </label></div>
+        <div><label> Введите пароль: <input type="password" name="password"/> </label></div>
+        <div><label> Введите ФИО: <input type="text" name="user_fio"/> </label></div>
+        <div><label> Введите телефон: <input type="text" name="user_tel"/> </label></div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <div><input style="padding: 10px" class="button button1" type="submit" value="Зарегистрироваться"/></div>
+    </form>
+</div>
+
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form action="/">
+        <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+    </form>
+</div>
+</body>
+</html>

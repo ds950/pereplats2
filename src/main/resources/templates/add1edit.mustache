@@ -1,0 +1,210 @@
+<html>
+<head>
+    <style>
+        table{
+            text-align: center;
+            margin: auto;
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        tr{
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        td{
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        p#snilsInfo {
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 5px; /* Расстояние от текста до рамки */
+        }
+    </style>
+    <link href="../css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/jquery-ui.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+    <script src="js/jquery.autocomplete.pack.js"></script>
+    <script src="js/jquery.autocomplete.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="js/datepicker-ru.js"></script>
+    <!--<script type="text/javascript">
+        if (window.jQuery) alert("jQuery подключен");
+        else alert("jQuery не подключен");
+    </script>-->
+    <script>
+        $( function() {
+            $( ".date" ).datepicker();
+            $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        } );
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+
+<h1 align="center" style="color: #2e2c91">Работа с переплатами/недоплатами</h1>
+<hr>
+<form action="/logout" method="post" style="text-align: right">
+    <input name="_csrf" type="hidden" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{PFIO}}</p>
+    <input class="button button1" style="padding: 10px" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center; margin:0 auto;">
+    <form action="/add1edit" method="post" name="data">
+        <input id="validation" name="validation" type="hidden" value="{{VALID}}">
+        <h2 align="center" style="color: #2e2c91">Редактирование решения об обнаружении ошибки, допущенной при
+            установлении (выплате)</h2>
+        <input id="pensid" name="pensid" type="hidden" value="{{ID}}">
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Введите дату решения
+                </div>
+                <div class="table-cell-invisible-left">
+                    <input class="content date" style="text-align: center; width: 100%" id="add1reshdate" name="add1reshdate" type="text" value="{{ADD1RD}}" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Введите описание ошибки:
+                </div>
+                <div class="table-cell-invisible-left">
+                    <textarea class="content" id="add1opismistake" name="add1opismistake" required rows="3" required>{{ADD1OM}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Решил в соответствии c...
+                </div>
+                <div class="table-cell-invisible-left">
+                    <input name="add1statja" required value="{{ADD1ST}}" style="text-align: center; width: 100%" type="text" required>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Устранить данную ошибку...
+                </div>
+                <div class="table-cell-invisible-left">
+                    <textarea  style="text-align: center" name="add1mistake" type="text" id="add1mistake" rows="2" required>{{ADD1M}}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    <input type="radio" name="add1viptype" value="1" placeholder="Переплата">Переплата
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input name="add1viptype" type="radio" value="0" placeholder="Недоплата">Недоплата
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    В размере...
+                </div>
+                <div class="table-cell-invisible-left">
+                    <input id="add1viprazn" name="add1viprazn" required style="text-align: center" type="text" value="{{ADD1VR}}">
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible">
+                    <p id="his" style="border: 1px dotted black; margin-left: 45%; margin-right: 45%; padding: 3px">Показать расчеты</p>
+                    <script>
+                        $('#his').click(function () {
+                            if($('#history').hasClass("style1")){
+                                $('#history').removeClass("style1");
+                            } else {
+                                $('#history').addClass("style1");
+                            }
+                        });
+                    </script>
+                    </label>
+                    <table id="history" class="style1">
+                        <th colspan="4">{{PFIO}}</th>
+                        <tr>
+                            <td>Месяц выплаты</td><td>Выплаченная сумма</td><td>Начисленная сумма</td><td>Разница</td>
+                        </tr>
+                        {{#add4}}
+                        <tr>
+                            <td>{{viphismonth}}</td><td>{{vip_summ}}</td><td>{{nach_summ}}</td><td>{{vip_razn}}</td>
+                        </tr>
+                        {{/add4}}
+                        <tr>
+                            <td></td><td></td><td></td><td>{{RESULT}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br>
+        <input name="_csrf" type="hidden" value="{{_csrf.token}}"/>
+        <button class="button button1" onclick="if (getElementById('add1reshdate').value==='' || getElementById('add1opismistake').value==='' || getElementById('add1viprazn').value==='') {alert('Заполните все поля'); return false;} else submit(alert('Данные успешно сохранены'));" style="padding: 10px"
+                type="submit">
+            Сохранить Изменения
+        </button>
+
+    </form>
+</div>
+<hr>
+<form action="/main" style="text-align: center">
+    <button class="button button1" style="padding: 10px;" type="submit">На главную</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<html>
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Times+New+Roman:400,600&subset=latin,cyrillic);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            border-radius: 4px;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+</head>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: crimson">Работа с переплатам/недоплатами</h1>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 5px" type="submit" value="Выйти"/>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<nav>
+    <ul class="topmenu">
+        <li><a href="" class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+                <li><a href="/pereplats">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a href="">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add1create">Формирование - решение об обнаружении ошибки<span
+                                        class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add2create">Формирование - протокол о выявлении излишне выплаченных сумм
+                                    пенсии<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add5create">Формирование - извещение пенсионеру об образовавшейся сумме
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+                            </ul>
+                        <li><a href="/pmis">Ошибка пенсионера >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add3create">Формирование - решение о взыскании сумм пенсии, излишне
+                                    выплаченных пенсионеру<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add6create">Формирование - извещение пенсионеру об установленном факте
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+
+                            </ul>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form method="post" action="/add5create">
+        <h2 align="center" style="color: crimson">Формирование извещения о сумме<br> образовавшейся переплаты</h2>
+        <div><label> Введите ФИО пенсионера: <input type="text" name="fio"/> </label></div>
+        <br>
+        <div><label> Введите адрес пенсионера: <input type="text" name="adress" style="text-align: center"/></label>
+        </div>
+        <br>
+        <div><label> УПФР в : <select type="text" name="add5_upr">
+            {{#upr}}
+                <option value="{{upr}}" title="Выберите управление" style="text-align: center">{{upr}}</option>
+            {{/upr}}
+        </select> районе </label></div>
+        <br>
+        <div><label> Адрес: <select type="text" name="upr_adress">
+            {{#upr}}
+                <option value="{{upr_adress}}" title="Выберите управление" style="text-align: center">УПФР в {{upr}}
+                    районе, адрес: {{upr_adress}}</option>
+            {{/upr}}
+        </select> районе </label></div>
+        <br>
+        <div><label> Начальник: <select type="text" name="upr_nach">
+            {{#upr}}
+                <option value="{{upr_nach}}" title="Выберите управление" style="text-align: center">Начальник управления
+                    в {{upr}} районе - {{upr_nach}}</option>
+            {{/upr}}
+        </select> районе </label></div>
+        <br>
+        <div><label> Исполнитель: <input type="text" name="upr_isp"/> </label></div>
+        <br>
+        <div><label> Телефон: <input type="text" name="tel" style="text-align: center"/></label></div>
+        <br>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}"><br>
+        <button style="padding: 10px" class="button button1" type="submit">Добавить</button>
+    </form>
+</div>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: center" action="/getAdd5File.docx">
+    <select id="fio_add5" type="text" name="fio_add5" style="text-align: center">
+        {{#add5}}
+            <option value="{{fio}}" style="text-align: center">ФИО: {{fio}}, Адрес: {{adress}}</option>
+        {{/add5}}
+    </select>
+    <button class="button button1" type="submit" style="text-align: center; padding: 10px">Сформировать документ
+    </button>
+    <br><br>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

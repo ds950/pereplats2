@@ -1,0 +1,253 @@
+<html>
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Times+New+Roman:400,600&subset=latin,cyrillic);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            border-radius: 4px;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+</head>
+<body style="background-color: #d6d8e3">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/jquery.maskedinput.min.js"></script>
+<h1 align="center" style="color: crimson">Работа с переплатами/недоплатами</h1>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 5px" type="submit" value="Выйти"/>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<nav>
+    <ul class="topmenu">
+        <li><a href="" class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+                <li><a href="/pereplats">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a href="">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add1create">Формирование - решение об обнаружении ошибки<span
+                                        class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add2create">Формирование - протокол о выявлении излишне выплаченных сумм
+                                    пенсии<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add5create">Формирование - извещение пенсионеру об образовавшейся сумме
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+                            </ul>
+                        <li><a href="/pmis">Ошибка пенсионера >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add3create">Формирование - решение о взыскании сумм пенсии, излишне
+                                    выплаченных пенсионеру<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add6create">Формирование - извещение пенсионеру об установленном факте
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+
+                            </ul>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form method="post" action="/pereplats">
+        <h2 align="center" style="color: crimson">Рассчет излишне выплаченных сумм пенсии</h2>
+        <label>Выберите в каком районе находится управление ПФР: <select type="text" name="upr"
+                                                                         style="text-align: center">
+            {{#upr}}
+                <option value="{{upr}}" title="Выберите управление" style="text-align: center">{{upr}}</option>
+            {{/upr}}
+        </select></label><br><br>
+        <label>Введите номер выплатного дела: <input placeholder="Номер ВД" type="number" maxlength="6"
+                                                     style="width: 100px; text-align: center" name="vdnum" id="vdnum"/></label><br><br>
+        <label>Введите ФИО пенсионера: <select id="fio" type="text" name="fio" style="text-align: center">
+            {{#pensioner}}
+                <option value="{{fio}}" title="Выберите пенсионера" style="text-align: center">{{fio}},
+                    СНИЛС: {{snl}}</option>
+            {{/pensioner}}
+        </select></label><br><br>
+        <label>Введите адрес пенсионера: <input style="width: 250px; text-align: center" type="text" name="pens_adress"
+                                                placeholder="Адрес пенсионера"/></label><br><br>
+        <label>Выберите вид пенсии: <select type="text" name="vp" style="text-align: center">
+            {{#vp}}
+                <option value="{{vp}}" title="Выберите ВП" style="text-align: center">{{vp}}</option>
+            {{/vp}}
+        </select></label><br><br>
+        <label>Введите месяц: <input id="vip_his_month" type="date" name="vip_his_month"></label><br><br>
+        <hr style="width: 100%; color: rgb(151, 7, 11);">
+        <script>
+            function addition() {
+                var vip_summ = parseFloat(document.getElementById('vip_summ').value);
+                var nach_summ = parseFloat(document.getElementById('nach_summ').value);
+
+                if (isNaN(vip_summ) === true) vip_summ = 0;
+                if (isNaN(nach_summ) === true) nach_summ = 0;
+
+                var vip_razn = vip_summ - nach_summ;
+                vip_razn = vip_razn.toFixed(2);
+                document.getElementById('result').value = vip_razn;
+            }
+        </script>
+        <label>Введите выплаченную сумму: <input id="vip_summ" min="0" type="number" max="999999999.99" step="0.01"
+                                                 name="vip_summ" style="text-align: center"/></label><br><br>
+        <label>Введите начисленную сумму: <input id="nach_summ" name="nach_summ" type="number" min="0" max="99999999.99"
+                                                 step="0.01" style="text-align: center"></label><br><br>
+        <label><input class="button button1" type="button" value="Рассчитать разницу" onclick="addition();"> Результат:
+            <input readonly style="text-align: center" id="result" name="vip_razn"/></label></label><br>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}"><br>
+        <input type="submit" style="padding: 10px" class="button button1" value="Внести в базу">
+    </form>
+</div>
+
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<h1 align="center" style="color: crimson">Формирование отчета</h1>
+<div style="text-align: center">
+    <form action="/getAdd4File.xls">
+        <label>Выберите пенсионера:
+            <select type="text" name="fio_search" style="text-align: center">
+                {{#add4}}
+                    <option value="{{fio}}" title="Выберите пенсионера" style="text-align: center">ФИО: {{fio}}, номер
+                        выплатного дела - {{vdnum}}</option>
+                {{/add4}}
+            </select></label><br><br>
+        <label>Выберите дату первой выплаты:
+            <select type="text" name="month1" style="text-align: center">
+                {{#add4}}
+                    <option value="{{vip_his_month}}" title="Первый месяц"
+                            style="text-align: center">{{vip_his_month}}</option>
+                {{/add4}}
+            </select></label><br><br>
+        <label>Выберите дату последней выплаты
+            <select type="text" name="month2" style="text-align: center">
+                {{#add4}}
+                    <option value="{{vip_his_month}}" title="Последний месяц"
+                            style="text-align: center">{{vip_his_month}}</option>
+                {{/add4}}
+            </select></label><br><br>
+        <button style="padding: 10px" class="button button1" type="submit">Экспорт в формат Excel</button>
+    </form>
+    <form action="/mistakes">
+        <button style="padding: 10px" class="button button1" type="submit">К причинам возникновения переплаты</button>
+    </form>
+    <hr style="width: 100%; color: rgb(151, 7, 11);">
+    <form action="/main">
+        <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+    </form>
+</div>
+
+</body>
+</html>

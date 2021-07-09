@@ -1,0 +1,108 @@
+<html>
+<link rel="stylesheet" href="../css/style.css">
+<script src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(
+            function () {
+                // $("input").each(function() {
+                if ($("#role").val() === "999") {
+                    $('#admin').removeClass("style1");
+                } else {
+                    $('#admin').addClass("style1");
+                }
+            });
+</script>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Здравствуйте!</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Вы вошли как: {{FIO}}</p>
+    <p style="float: left; margin-left: 2%">Логин: {{UNAME}}</p>
+    <input type="hidden" value="{{ROLE}}" name="role" id="role">
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <h1>Выберите интересующий вопрос</h1>
+    <div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form action="/pdata">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Ввод данных пенсионера</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--<div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form hidden action="/pereplats">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Работа с переплатами/недоплатами</button>
+                </form>
+            </div>
+        </div>
+    </div>-->
+    <div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form action="/addprint">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Печать документов</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form action="/editpage">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Редактирование данных</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form action="/journals">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Журналы</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div id="admin" style="text-align: center">
+    <div class="table-main" >
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form action="/adminpage">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Администрирование</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</div>
+</body>
+</html>

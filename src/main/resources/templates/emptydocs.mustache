@@ -1,0 +1,56 @@
+<html>
+<link rel="stylesheet" href="../css/style.css">
+
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Здравствуйте!</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <h1>Упс...</h1>
+    <div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <p style="text-align: center; width: 100%">Документов по данному пенсионеру не сформировано, вернитесь назад</p>
+                <form action="/addprint">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">Назад</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="table-main">
+        <div class="table-row-main">
+            <div class="table-cell-invisible">
+                <form action="/main">
+                    <button style="padding: 10px; width: 100%" class="button button1" type="submit">На главную</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

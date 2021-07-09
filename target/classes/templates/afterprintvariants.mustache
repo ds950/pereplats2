@@ -1,0 +1,91 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(
+                function () {
+                    // $("input").each(function() {
+                    if ($("#pfriw").val() === "false") {
+                        $('#submbtn1').removeClass("button button1");
+                        $('#submbtn2').removeClass("button button1");
+                        $('#submbtn3').removeClass("button button1");
+                        $('#submbtn1').addClass("style1");
+                        $('#submbtn2').addClass("style1");
+                        $('#submbtn3').addClass("style1");
+                    } else {
+                        $('#submbtn4').removeClass("button button1");
+                        $('#submbtn5').removeClass("button button1");
+                        $('#submbtn6').removeClass("button button1");
+                        $('#submbtn4').addClass("style1");
+                        $('#submbtn5').addClass("style1");
+                        $('#submbtn6').addClass("style1");
+                    }
+                });
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Здравствуйте!</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{PFIO}}</p>
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <input type="hidden" id="pfriw" name="pfriw" value="{{PFRIW}}">
+    <form action="/printvariants">
+        <input type="hidden" id="id" name="id" value="{{ID}}">
+        <input type="hidden" id="month2" name="month2" value="{{MA}}">
+        <input type="hidden" id="month1" name="month1" value="{{MB}}">
+        <h2 align="center" style="color: #2e2c91">Печать документов</h2>
+        <button formaction="/getAdd4File.xls" name="pereplats4" style="padding: 10px" id="submbtnp"
+                class="button button1" type="submit">Расчет переплат
+        </button>
+        <button formaction="/getAdd1File.docx" name="prfmistake1" style="padding: 10px" id="submbtn1"
+                class="button button1" type="submit">Решение об обнаружении ошибки
+        </button>
+        <button formaction="/getAdd2File.docx" name="prfmistake2" style="padding: 10px" id="submbtn2"
+                class="button button1" type="submit">Протокол о выявлении ИВСП
+        </button>
+        <button formaction="/getAdd5File.docx" name="prfmistake3" style="padding: 10px" id="submbtn3"
+                class="button button1" type="submit">Извещение пенсионеру о сумме переплаты
+        </button>
+        <button formaction="/getAdd3File.docx" name="pmistake1" style="padding: 10px" id="submbtn4"
+                class="button button1" type="submit">Решение о взыскании сумм пенсии
+        </button>
+        <button formaction="/getAdd9File.docx" name="pmistake2" style="padding: 10px" id="submbtn5"
+                class="button button1" type="submit">Протокол о выявлении ИВСП
+        </button>
+        <button formaction="/getAdd6File.docx" name="pmistake3" style="padding: 10px" id="submbtn6"
+                class="button button1" type="submit">Извещение об установленном факте переплаты
+        </button>
+    </form>
+</div>
+<hr>
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

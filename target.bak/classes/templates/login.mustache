@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        .button1 {
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            border-radius: 4px;
+            padding: 8px 20px;
+            font-size: 12px;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+    <title>Вход в учетную запись </title>
+</head>
+<body style="background-color: #d6d8e3">
+<h1 style="text-align: center">Вход в учетную запись пользователя</h1>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="margin: auto; border:1px solid #d6d8e3; text-align: center">
+    <form action="/login" method="post">
+        <div><label>Логин: <input style="text-align: center; width: 110px" type="text" name="username"/> </label></div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <div><label>Пароль: <input style="text-align: center; width: 103px" type="password" name="password"/> </label>
+        </div>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+        <p></p>
+        <div><input class="button button1" type="submit" value="Войти"/></div>
+    </form>
+</div>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form action="/login">
+        <button formaction="/" class="button button1" type="submit">Назад</button>
+        <button formaction="/registration" class="button button1" type="submit">Регистрация</button>
+    </form>
+</div>
+</body>
+</html>

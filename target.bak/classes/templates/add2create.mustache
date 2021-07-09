@@ -1,0 +1,369 @@
+<html>
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Times+New+Roman:400,600&subset=latin,cyrillic);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            border-radius: 4px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+</head>
+<body style="background-color: #d6d8e3">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        function calcControlSummSnils(add2_snl) {
+            // Проверка суммы
+
+
+            function checkSumm(s) {
+                if (s < 10) {
+                    return "0" + s;
+                }
+                if (s < 100) {
+                    return s;
+                }
+                if (s === 100 || s === 101) {
+                    return "00";
+                }
+                if (s > 101) {
+                    return checkSumm(s % 101);
+                }
+            }
+
+            // Расчёт суммы
+            var summ = 0;
+            for (var i = 0; i < 9; i++) {
+                summ += (9 - i) * parseInt(add2_snl[i]);
+            }
+            console.log(summ);
+            return checkSumm(summ);
+        }
+
+        // Перевод массива в строку
+
+
+        function arr2str(arr) {
+            var str = "";
+            for (var i = 0; i < arr.length; i++) {
+                str += arr[i];
+            }
+            return str;
+        }
+
+        // Убирает из строки лишние символы - возврат массива цифр
+
+
+        function validateSnils(str) {
+            var digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            var correctStr = [];
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] in digits) {
+                    correctStr.push(parseInt(str[i]));
+                }
+            }
+            //console.log(correctStr);
+            return arr2str(correctStr);
+        }
+
+        // Проверка на совпадание контрольной суммы
+
+
+        function checkSnils(add2_snl) {
+            if (parseInt(calcControlSummSnils(add2_snl.substring(0, 9))) === parseInt(add2_snl.substring(9, 11))) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        //
+
+        function showAlertMain(str, type) {
+            $('#snilsInfo').html(str);
+        }
+
+        $('#add2_snl').bind('blur', function () {
+            $("#alertDiv").remove();
+            add2_snl = validateSnils($("#add2_snl").val());
+            //correctSnils = []; // Список потенциально правильных корректных СНИЛСов
+            switch (add2_snl.length) {
+                case 9: {
+                    console.warn("Не полный номер");
+                    temp = add2_snl + calcControlSummSnils(add2_snl);
+                    //correctSnils.push(temp);
+                    showAlertMain("В номере нет контрольного числа!", "block");
+                    break;
+                }
+                case 11: {
+                    console.log("Обработка");
+                    if (checkSnils(add2_snl)) {
+                        showAlertMain('Введён корректный номер СНИЛС!', "success");
+                    } else {
+                        showAlertMain('<div style="color: crimson">СНИЛС не корректен</div>', "success");
+                        var temp = add.substring(0, 9) + calcControlSummSnils(add2_snl.substring(0, 9));
+                    }
+                    break;
+                }
+                default: {
+                    console.warn("Не правильный номер СНИЛС");
+                    showAlertMain('Введён не корректный номер СНИЛС!', "error");
+                    break;
+                }
+            }
+        });
+    });
+</script>
+<h1 align="center" style="color: crimson">Работа с переплатами/недоплатами</h1>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 5px" type="submit" value="Выйти"/>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<nav>
+    <ul class="topmenu">
+        <li><a href="" class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+                <li><a href="/pereplats">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a href="">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add1create">Формирование - решение об обнаружении ошибки<span
+                                        class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add2create">Формирование - протокол о выявлении излишне выплаченных сумм
+                                    пенсии<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add5create">Формирование - извещение пенсионеру об образовавшейся сумме
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+                            </ul>
+                        <li><a href="/pmis">Ошибка пенсионера >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add3create">Формирование - решение о взыскании сумм пенсии, излишне
+                                    выплаченных пенсионеру<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add6create">Формирование - извещение пенсионеру об установленном факте
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+
+                            </ul>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form method="post" action="/add2create">
+        <h2 align="center" style="color: crimson">Формирование протокола о выявлении,<br> излишне выплаченных пенсионеру
+            сумм пенсии</h2>
+        <div><label> Введите распорядительную надпись: <input type="text" name="rasp_nadp"/> </label></div>
+        <br>
+        <div><label> Выберите должность руководителя: <select type="text" name="ruk_dolzh" style="text-align: center">
+            <option value="Начальник УПФР" style="text-align: center">Начальник УПФР</option>
+            <option value="Заместитель начальника" style="text-align: center">Заместитель начальника</option>
+        </select> </label></div>
+        <br>
+        <div><label> Введите ФИО руководителя: <input type="text" name="ruk_fio"/> </label></div>
+        <br>
+        <div><label> Введите дату протокола: <input type="date" name="prot_date"/> </label></div>
+        <br>
+        <div><label> Выберите территориальный орган ПФР: <select type="text" name="upr_full">
+            {{#upr}}
+                <option value="{{upr_full}}" title="Выберите управление"
+                        style="text-align: center">{{upr_full}}</option>
+            {{/upr}}
+        </select> </label></div>
+        <br>
+        <div><label> Введите ФИО пенсионера:<input type="text" name="fio"/> </label></div>
+        <br>
+        <div><label> Введите СНИЛС пенсионера:<input style="width: 110px; text-align: center" type="text" id="add2_snl"
+                                                     name="add2_snl" placeholder="___-___-___ __">
+            <script>
+                $(function () {
+                    //Использование параметра completed
+                    $("#add2_snl").mask("999-999-999 99", {});
+                });
+            </script>
+        </label>
+            <p id="snilsInfo"></p>
+            <div><label> Введите номер выплатного дела:<input type="number" name="add2_vdnum"/> </label></div>
+            <br>
+            <div><label> Выберите вид выплаты: <select type="text" name="add2_vv" style="text-align: center">
+                <option value="пенсия" style="text-align: center">Пенсия</option>
+                <option value="ЕДВ" style="text-align: center">ЕДВ</option>
+                <option value="ФСД" style="text-align: center">ФСД</option>
+                <option value="КТЛ" style="text-align: center">КТЛ</option>
+            </select> </label></div>
+            <br>
+            <div><label> Период с: <input type="date" name="date_1"/> </label></div>
+            <br>
+            <div><label> Период до: <input type="date" name="date_2"/> </label></div>
+            <br>
+            <div><label> Сумма рублей: <input type="number" min="0" name="summ_rub"
+                                              style="text-align: center; width: 100px"/></label><label>Сумма
+                копеек:<input type="number" min="00" max="99" style="width: 50px; text-align: center " name="summ_kop"/></label>
+            </div>
+            <br>
+            <div><label> Причина образования излишне выплаченных сумм пенсии: <input type="text" name="add2_prich"
+                                                                                     style="width: 300px"/> </label>
+            </div>
+            <br>
+            <div><label> Выберите должность проверяющего: <select type="text" name="add2_prov_dolzh"
+                                                                  style="text-align: center">
+                {{#dolzhnost}}
+                    <option value="{{dolzhnost}}" title="Выберите должность"
+                            style="text-align: center">{{dolzhnost}}</option>
+                {{/dolzhnost}}
+            </select> </label></div>
+            <br>
+            <div><label> Введите ФИО проверяющего:<input type="text" name="add2_prov_fio"/> </label></div>
+            <br>
+            <div><label> Выберите должность работника, производящего расчет: <select type="text"
+                                                                                     name="add2_proizv_dolzh"
+                                                                                     style="text-align: center">
+                {{#dolzhnost}}
+                    <option value="{{dolzhnost}}" title="Выберите должность"
+                            style="text-align: center">{{dolzhnost}}</option>
+                {{/dolzhnost}}
+            </select> </label></div>
+            <br>
+            <div><label> Введите ФИО работника, производящего расчет:<input type="text" name="add2_proizv_fio"/>
+            </label></div>
+            <br>
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}"><br>
+            <button style="padding: 10px" class="button button1" type="submit">Внести в базу</button>
+    </form>
+</div>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: center" action="/getAdd2File.docx">
+    <select id="add2_search" type="text" name="add2_search" style="text-align: center">
+        {{#add2}}
+            <option value="{{fio}}" style="text-align: center">Номер:{{num}}, ФИО: {{fio}}, СНИЛС: {{add2_snl}}</option>
+        {{/add2}}
+    </select>
+    <button class="button button1" type="submit" style="text-align: center; padding: 10px">Сформировать документ
+    </button>
+    <br><br>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

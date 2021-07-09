@@ -1,0 +1,288 @@
+<html>
+<head>
+    <style>
+        table{
+            text-align: center;
+            margin: auto;
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        tr{
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        td{
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 3px; /* Расстояние от текста до рамки */
+        }
+        label#vin {
+            border: 1px dashed crimson;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 5px; /* Расстояние от текста до рамки */
+            margin-left: 20% ;
+            margin-right: 20% ;
+        }
+    </style>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/jquery-ui.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="js/datepicker.js"></script>
+    <script src="js/datepicker-ru.js"></script>
+    <script>
+        $( function() {
+            $( ".date" ).datepicker();
+            $.datepicker.setDefaults( $.datepicker.regional[ "ru" ] );
+        } );
+    </script>
+    <script type="text/javascript">
+        $(document).ready(
+                function () {
+                    // $("input").each(function() {
+                    if ($("#validation").val() === "false") {
+
+                        alert("Документ не был ранее сформирован!/n Возвращаем Вас назад ");
+                        location.href = "/editvariants";
+                    } else {
+                        alert("Данные по пенсионеру найдены!")
+                    }
+                });
+    </script>
+    <script>
+        $(document).ready(
+                function () {
+                    $("#add2rukdolzh").change(function () {
+
+                        // $("input").each(function() {
+
+                        if ($("#add2rukdolzh").val() === "Начальник Управления") {
+                            $("#add2rukfio").attr("value", "ЗАБАРА В.И.");
+                        } else {
+                            $("#add2rukfio").removeAttr("value");
+                            $("#add2rukfio").attr("value", "НАГОРНАЯ Е.А.");
+                        }
+                        //  });
+
+
+                    });
+                });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#submbtn").onclick(function () {
+                if ($("#fio").val() === '' ||
+                        $("#add2raspnadp").val() === '' ||
+                        $("#add2rukdolzh").val() === '' ||
+                        $("#add2rukfio").val() === '' ||
+                        $("#add2protdate").val() === '' ||
+                        $("#add2vv").val() === '' ||
+                        $("#add2date1").val() === '' ||
+                        $("#add2date2").val() === '' ||
+                        $("#add2summrub").val() === '' ||
+                        $("#add2prich").val() === '' ||
+                        $("#add2provdolzh").val() === '' ||
+                        $("#add2provfio").val() === '' ||
+                        $("#add2proizvdolzh").val() === '' ||
+                        $("#add2proizvfio").val() === '') {
+                    alert('Заполните все поля');
+                    return false;
+                } else submit(alert("Данные успешно сохранены"));
+            });
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Здравствуйте!</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{PFIO}}</p>
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <input type="hidden" id="validation" name="validation" value="{{VALID}}">
+    <form method="post" action="/add2edit" name="data">
+        <h2 align="center" style="color: #2e2c91">Редактирование протокола о выявлении<br> излишне выплаченных
+            пенсионеру сумм пенсии</h2>
+        <input type="hidden" name="pensid" id="pensid" value="{{ID}}">
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Распорядительная надпись:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" value="{{ADD2RASPNADP}}" type="text" name="add2raspnadp" id="add2raspnadp" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Должность руководителя:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <select type="text" id="add2rukdolzh" name="add2rukdolzh"
+                            style="text-align: center" required>
+                        <option value="{{ADD2RUKDOLZH}}" style="text-align: center" disabled selected>{{ADD2RUKDOLZH}}</option>
+                        <option value="Начальник Управления" style="text-align: center">Начальник Управления</option>
+                        <option value="Заместитель Начальника Управления" style="text-align: center">Заместитель начальника</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    ФИО руководителя:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input type="text" class="content" style="text-align: center" id="add2rukfio" value="{{ADD2RUKFIO}}" name="add2rukfio" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Дата протокола:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input value="{{ADD2PROTDATE}}" class="content date" type="text" id="add2protdate" name="add2protdate" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Выберите вид выплаты:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input value="{{ADD2VV}}" type="text" name="add2vv" id="add2vv" style="text-align: center" required>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Период с: <input class="content" value="{{ADD2DATE1}}" type="text" name="add2date1" id="add2date1" required/>
+                </div>
+                <div class="table-cell-invisible-right">
+                    Период до: <input class="content" value="{{ADD2DATE2}}" type="text" name="add2date2" id="add2date2" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Сумма рублей:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" value="{{ADD2SUMMRUB}}" type="text" min="0" name="add2summrub" id="add2summrub" style="text-align: center; width: 100px" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible">
+                    Виновник... <br><label><input name="add2mistakeauthor" type="radio" value="УПФР">УПФР <input
+                            name="add2mistakeauthor" type="radio" value="ПЕНСИОНЕР">Пенсионер</label>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Причина образования ИВСП:
+                </div>
+                <div class="table-cell-invisible-right">
+                    <input class="content" value="{{ADD2PRICH}}" type="text" name="add2prich" id="add2prich" style="width: 300px" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    <h4>Проверяющий</h4>
+                </div>
+                <div class="table-cell-invisible-right">
+                    <h4>Произвел расчет</h4>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    Должность: <input class="content" value="{{ADD2PD}}" type="text" name="add2provdolzh" id="add2provdolzh" style="text-align: center" required/>
+                </div>
+                <div class="table-cell-invisible-right">
+                    Должность: <input value="{{ADD2PZD}}" class="content" type="text" name="add2proizvdolzh" style="text-align: center" required/>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div class="table-row">
+                <div class="table-cell-invisible-left">
+                    ФИО проверяющего:<input value="{{ADD2PF}}" style="text-align: center" class="content" type="text" name="add2provfio" id="add2provfio" required/>
+                </div>
+                <div class="table-cell-invisible-right">
+                    ФИО работника: <input value="{{ADD2PZF}}" class="content" type="text" name="add2proizvfio" style="text-align: center" id="add2proizvfio" required/>
+                </div>
+            </div>
+        </div>
+        <br>
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}"><br>
+        <button style="padding: 10px" id="submbtn" class="button button1" type="submit">Сохранить изменения</button>
+    </form>
+</div>
+<hr>
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+</head>
+<body style="background-color: #d6d8e3">
+
+<h1 align="center" style="color: #2e2c91">Переплата, возникшая по вине пенсионера..</h1>
+<h2 align="center" style="color: #2e2c91">Выберите документ, который необходимо сформировать.</h2>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Выбран пенсионер: {{FIO}}</p>
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <form action="/add3create">
+        <button class="button button1" type="submit" style="padding: 10px; text-align: center">Решение о взыскании сумм
+            пенсии<br>излишне выплаченных пенсионеру
+        </button>
+    </form>
+    <br>
+</div>
+<hr>
+<div style="text-align: center">
+    <form action="/main">
+        <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+    </form>
+</div>
+</body>
+</html>

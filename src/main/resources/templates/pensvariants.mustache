@@ -1,0 +1,85 @@
+<html>
+<head>
+    <style>
+        p#snilsInfo {
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 5px; /* Расстояние от текста до рамки */
+        }
+    </style>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+    <script src="js/jquery.autocomplete.pack.js"></script>
+    <script src="js/jquery.autocomplete.js"></script>
+    <!--<script type="text/javascript">
+        if (window.jQuery) alert("jQuery подключен");
+        else alert("jQuery не подключен");
+    </script>-->
+    <script>
+        $(function () {
+            //Использование параметра completed
+            $("#snls").mask("999-999-999 99", {});
+        });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".content").on("keyup", function () {
+
+                var text = $(this).val();
+                var new_text = text.toUpperCase();
+
+                $(this).val(new_text);
+
+            });
+
+        });
+
+    </script>
+</head>
+<body style="background-color: #d6d8e3">
+
+<h1 align="center" style="color: #2e2c91">Работа с переплатами/недоплатами</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center; margin:0 auto;">
+    <h1>Для начала работы необходимо ввести данные или выбрать пенсионера из базы</h1>
+    <form action="/pensvariants">
+        <button formaction="/pdata" style="padding: 10px;" type="submit" class="button button1">Ввод данных пенсионера</button>
+        <button formaction="/pensselect"  style="padding: 10px;" type="submit" class="button button1">Выбор пенсионера</button>
+    </form>
+</div>
+<hr>
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px;" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

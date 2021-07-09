@@ -1,0 +1,282 @@
+<html>
+<head>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Times+New+Roman:400,600&subset=latin,cyrillic);
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Times New Roman", serif;
+        }
+
+        nav {
+            background: #d6d8e3;
+        }
+
+        nav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        nav ul:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            transition: .3s linear;
+        }
+
+        .topmenu > li {
+            float: left;
+            position: relative;
+            border-left: 1px solid black;
+        }
+
+        .topmenu > li:first-child {
+            border-left: 0;
+        }
+
+        .topmenu > li > a {
+            padding: 1px 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: black;
+            letter-spacing: 2px;
+        }
+
+        .topmenu > li > a.active,
+        .submenu a:hover {
+            color: crimson;
+        }
+
+        .topmenu .fa,
+        .submenu .fa {
+            margin-left: 5px;
+            color: inherit;
+        }
+
+        .submenu {
+            position: absolute;
+            z-index: 5;
+            min-width: 200px;
+            background: white;
+            border-top: 1px solid #CBCBCC;
+            border-left: 1px solid #CBCBCC;
+            border-right: 1px solid #CBCBCC;
+            visibility: hidden;
+            opacity: 0;
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: .3s linear;
+        }
+
+        .submenu li {
+            position: relative;
+        }
+
+        .submenu li a {
+            color: #282828;
+            padding: 10px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid #CBCBCC;
+        }
+
+        .submenu .submenu {
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            transition: .3s linear;
+        }
+
+        nav li:hover > .submenu {
+            transform: rotateX(0deg);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .button1 {
+            border-radius: 4px;
+            -webkit-transition-duration: 0.4s; /* Safari */
+            transition-duration: 0.4s;
+            background-color: white;
+            color: black;
+            border: 2px solid #008CBA;
+        }
+
+        .button1:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+</head>
+<body style="background-color: #d6d8e3">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+<h1 align="center" style="color: crimson">Работа с переплатами/недоплатами</h1>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <input style="padding: 10px" type="submit" value="Выйти"/>
+</form>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<nav>
+    <ul class="topmenu">
+        <li><a href="" class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+                <li><a href="/pereplats">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a href="">Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add1create">Формирование - решение об обнаружении ошибки<span
+                                        class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add2create">Формирование - протокол о выявлении излишне выплаченных сумм
+                                    пенсии<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add5create">Формирование - извещение пенсионеру об образовавшейся сумме
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+                            </ul>
+                        <li><a href="/pmis">Ошибка пенсионера >><span class="fa fa-angle-down"></span></a>
+                            <ul class="submenu">
+                                <li><a href="/add3create">Формирование - решение о взыскании сумм пенсии, излишне
+                                    выплаченных пенсионеру<span class="fa fa-angle-down"></span></a></li>
+                                <li><a href="/add6create">Формирование - извещение пенсионеру об установленном факте
+                                    переплаты<span class="fa fa-angle-down"></span></a></li>
+
+                            </ul>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<div style="text-align: center">
+    <form method="post" action="/add3create">
+        <h2 align="center" style="color: crimson">Формирование решения о взыскании сумм пенсии,<br> излишне выплаченных
+            пенсионеру</h2>
+        <div><label> Введите дату решения: <input id="add3_date" type="date" name="add3_date"/> </label></div>
+        <br>
+        <div><label> Выберите в каком районе находится управление ПФР: <select type="text" name="add3_upr"
+                                                                               style="text-align: center">
+            {{#upr}}
+                <option value="{{upr}}" title="Выберите управление" style="text-align: center">В {{upr}} районе</option>
+            {{/upr}}
+        </select></label></div>
+        <br><br>
+        <p>Заполните, пожалуйста нужный блок:</p>
+
+        <hr style="width: 100%; color: rgb(151, 7, 11);">
+        <p>Блок 1. Добровольное возмещение излишне выплаченных сумм пенсии</p>
+        <hr style="width: 100%; color: rgb(151, 7, 11);">
+
+        <div><label> Введите ФИО: <input id="block1_fio" type="text" name="block1_fio" style="width: 200px"/> </label>
+        </div>
+        <br>
+        <div><label> Введите регистрационный номер заявления: <input id="block1_num" type="number" name="block1_num"
+                                                                     style="width: 200px"/> </label></div>
+        <br>
+        <div><label> Введите дату приема заявления: <input id="block1_date" type="date" name="block1_date"
+                                                           style="width: 200px"/> </label></div>
+        <br>
+        <div><label> Введите СНИЛС: <input id="block1_snl" type="text" style="width: 110px; text-align: center"
+                                           name="block1_snl" placeholder="___-___-___ __">
+            <script>
+                $(function () {
+                    //Использование параметра completed
+                    $("#block1_snl").mask("999-999-999 99", {});
+                });
+            </script>
+        </label><br><br>
+            <div><label> Введите номер выплатного дела: <input id="block1_vd" type="date" name="block1_vd"/> </label>
+            </div>
+            <br>
+
+            <hr style="width: 100%; color: rgb(151, 7, 11);">
+            <p>Блок 2. Сведения, имеющиеся в распоряжении территориального органа Пенсионного фонда.</p>
+            <hr style="width: 100%; color: rgb(151, 7, 11);">
+
+            <div><label> Введите ФИО: <input id="block2_fio" type="text" name="block2_fio" style="width: 200px"/>
+            </label></div>
+            <br>
+            <div><label> Введите СНИЛС: <input style="width: 110px; text-align: center" id="block2_snl" type="text"
+                                               name="block2_snl" placeholder="___-___-___ __"/>
+                <script>
+                    $(function () {
+                        //Использование параметра completed
+                        $("#block2_snl").mask("999-999-999 99", {});
+                    });
+                </script>
+            </label><br><br>
+                <div><label> Введите номер выплатного дела: <input id="block2_vd" type="number" name="block2_vd"/>
+                </label></div>
+                <br>
+
+                <hr style="width: 100%; color: rgb(151, 7, 11);">
+
+                <div><label> Выберите вид пенсии: <select type="text" name="block3_vp" style="text-align: center">
+                    {{#vp}}
+                        <option value="{{vp}}" title="Выберите ВП" style="text-align: center">{{vp}}</option>
+                    {{/vp}}
+                </select></label></div>
+                <br>
+                <div><label> Выберите статью законодательного акта: <select type="text" name="block3_klass"
+                                                                            style="text-align: center">
+                    {{#klass}}
+                        <option value="{{statja}}" style="text-align: center">{{uslovie}} {{statja}}</option>
+                    {{/klass}}
+                </select></label></div>
+                <br>
+                <div><label> Введите дату: <input id="block3_date" type="date" name="block3_date"/> </label></div>
+                <br><br>
+                <div><label> Размер (процент или твердая сумма): <input id="block3_razmer" type="number"
+                                                                        name="block3_razmer" placeholder="Процент"/>
+                    <input id="block3_razmer_tverd" type="number" name="block3_razmer_tverd"
+                           placeholder="Твердая сумма"/> </label></div>
+                <br>
+                <div><label> Начальник управления: <select type="text" name="block3_upr_fio">
+                    {{#upr}}
+                        <option value="{{upr_nach}}" title="ФИО начальника">в {{upr}} районе - {{upr_nach}}</option>
+                    {{/upr}}
+                </select></label></div>
+                <br><br>
+                <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+                <button style="padding: 10px" class="button button1" type="submit">Добавить</button>
+    </form>
+</div>
+<hr style="width: 100%; color: rgb(151, 7, 11); ">
+<div style="text-align: center">
+    <form style="text-align: center" action="/add3create">
+        <select id="add3_b1_num" type="text" name="add3_b1_num" style="text-align: center; width: 300px">
+            {{#add3}}
+                <option value="{{num3}}" style="text-align: center">Номер: {{num3}}, ФИО: {{block1_fio}}{{block2_fio}},
+                    СНИЛС: {{block1_snl}}{{block2_snl}}</option>
+            {{/add3}}
+        </select><br><br>
+        <button class="button button1" formaction="/getAdd31File.docx" type="submit" style="text-align: center">
+            Формирование - добровольное возмещение излишне<br>выплаченных сумм пенсии
+        </button>
+        <button class="button button1" formaction="/getAdd32File.docx" type="submit" style="text-align: center">
+            Формирование - сведения, имеющиеся в распоряжении<br>территориального органа ПФР
+        </button>
+        <br>
+    </form>
+</div>
+<hr style="width: 100%; color: rgb(151, 7, 11);">
+<form style="text-align: center" action="/main">
+    <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+</form>
+</body>
+</html>

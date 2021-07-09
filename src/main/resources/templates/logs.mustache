@@ -1,0 +1,195 @@
+<html>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="../css/jquery-ui.css">
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.dataTables.js"></script>
+<script src="/js/jquery.dataTables.min.js"></script>
+<script src="js/datepicker.js"></script>
+<script src="js/datepicker-ru.js"></script>
+
+<script>
+    $(document).ready(function() {
+
+        $.fn.dataTableExt.oSort['date-asc']  = function(a,b) {
+            var ruDatea=$.trim(a);
+            var ruDateb=$.trim(b);
+
+            if (ruDatea[2]*1<ruDateb[2]*1) return 1;
+            if (ruDatea[2]*1>ruDateb[2]*1) return -1;
+            if (ruDatea[2]*1 == ruDateb[2]*1)
+            {
+                if (ruDatea[1]*1<ruDateb[1]*1) return 1;
+                if (ruDatea[1]*1>ruDateb[1]*1) return -1;
+                if (ruDatea[1]*1 == ruDateb[1]*1)
+                {
+                    if (ruDatea[0]*1<ruDateb[0]*1) return 1;
+                    if (ruDatea[0]*1>ruDateb[0]*1) return -1;
+                }
+                else return 0;
+            }
+        };
+
+        $.fn.dataTableExt.oSort['date-desc'] = function(a,b) {
+            var ruDatea=$.trim(a);
+            var ruDateb=$.trim(b);
+
+            if (ruDatea[2]*1<ruDateb[2]*1) return -1;
+            if (ruDatea[2]*1>ruDateb[2]*1) return 1;
+            if (ruDatea[2]*1 == ruDateb[2]*1)
+            {
+                if (ruDatea[1]*1<ruDateb[1]*1) return -1;
+                if (ruDatea[1]*1>ruDateb[1]*1) return 1;
+                if (ruDatea[1]*1 == ruDateb[1]*1)
+                {
+                    if (ruDatea[0]*1<ruDateb[0]*1) return -1;
+                    if (ruDatea[0]*1>ruDateb[0]*1) return 1;
+                }
+                else return 0;
+            }
+        };
+
+        $.fn.dataTableExt.afnFiltering.push(
+                function(oSettings, aData, iDataIndex){
+                    var dateStart = parseDateValue($("#dateStart").val());
+                    var dateEnd = parseDateValue($("#dateEnd").val());
+                    // aData represents the table structure as an array of columns, so the script access the date value
+                    // in the first column of the table via aData[0]
+                    var evalDate= parseDateValue(aData[0]);
+                    if (evalDate >= dateStart && evalDate <= dateEnd) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                });
+
+        function parseDateValue(rawDate) {
+            var dateArray= rawDate.split("-");
+            var parsedDate= dateArray[1] + dateArray[2] + dateArray[0];
+            return parsedDate;
+        }
+
+        // Create event listeners that will filter the table whenever the user types in either date range box or
+        // changes the value of either box using the Datepicker pop-up calendar
+        $("#dateStart").keyup ( function() { dtCl.fnDraw(); } );
+        $("#dateStart").change( function() { dtCl.fnDraw(); } );
+        $("#dateEnd").keyup ( function() { dtCl.fnDraw(); } );
+        $("#dateEnd").change( function() { dtCl.fnDraw(); } );
+
+
+    dtCl = $('#logs').dataTable({
+            "iDisplayLength": 100,
+
+            "aLengthMenu": [[ 10, 20, 50, 100 ,-1],[10,20,50,100,"все"]],
+            "bRetrieve": false,
+            "ordering": true,
+            "order": [0, 'asc'],
+            "aoColumns": [{"sType": "date"}, {"width": "100px"},
+                {}],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 по 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+            }
+
+        });
+
+        });
+
+</script>
+<script>
+    $(document).ready(function () {
+        $(function () {
+            $(".datepicker").datepicker();
+            $.datepicker.setDefaults($.datepicker.regional["ru"]);
+        })
+    })
+</script>
+<body style="background-color: #d6d8e3">
+<h1 align="center" style="color: #2e2c91">Здравствуйте!</h1>
+<hr>
+<form style="text-align: right" action="/logout" method="post">
+    <input type="hidden" name="_csrf" value="{{_csrf.token}}">
+    <p style="float: left; margin-left: 2%">Вы вошли как: {{FIO}}</p>
+    <p style="float: left; margin-left: 2%">Логин: {{UNAME}}</p>
+    <input style="padding: 10px" class="button button1" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center">
+    <br>
+    <div id="baseDateControl">
+        <div class="dateControlBlock">
+            Период с <input type="text" name="dateStart" id="dateStart" value="2019-01-01" class="datepicker" size="8"/> по
+            <input type="text" name="dateEnd" id="dateEnd" value="2019-12-31" class="datepicker" size="8"/>
+        </div>
+    </div>
+    <table class="display" style="width: 90%; background-color: #aaaaaa; margin: auto; border: solid 1px gray" id="logs" >
+        <thead style="background-color: #aaaaaa; font-size: 12px">
+            <th style="text-align: center"><b>Дата и время</b></th>
+            <th style="text-align: center" class="sorting"><b>Пользователь</b></th>
+            <th style="text-align: center"><b>Действия</b></th>
+        </thead>
+        <tbody>
+        {{#LOGS}}
+            <tr style="background-color: #aaaaaa; font-size: 12px">
+                <td style="background-color: #cccccc; font-size: 12px">{{date}}</td>
+                <td style="background-color: #cccccc; font-size: 12px">{{username}}</td>
+                <td style="background-color: #cccccc; font-size: 12px">{{description}}</td>
+            </tr>
+        {{/LOGS}}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3" style="text-align: right; margin-right: 10px; background-color: #aaaaaa">
+                <a href="/delete">Очистить</a>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+    <div id="endBlock"></div>
+    <br>
+    <hr>
+    <form style="text-align: center" action="/main">
+        <button style="padding: 10px" class="button button1" type="submit">На главную</button>
+    </form>
+</div>
+</body>
+</html>

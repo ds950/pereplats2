@@ -1,0 +1,89 @@
+<html>
+<head>
+    <style>
+        p#snilsInfo {
+            border: 1px dashed black;
+            /* Толщина рамки в пикселах,
+                                      тип границы (в данном случае сплошная линия) и
+                                      цвет линии */
+            padding: 5px; /* Расстояние от текста до рамки */
+        }
+    </style>
+    <link href="../css/style.css" rel="stylesheet">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.maskedinput.min.js"></script>
+    <script src="js/jquery.autocomplete.pack.js"></script>
+    <script src="js/jquery.autocomplete.js"></script>
+    <!--<script type="text/javascript">
+        if (window.jQuery) alert("jQuery подключен");
+        else alert("jQuery не подключен");
+    </script>-->
+    <script>
+
+
+        $(document).ready( function () {
+
+            function in_array(value, array) {
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i] == value) return true;
+                }
+                return false;
+            }
+
+            var mass = [0, 1, 2, 7, 9];
+            var code = $("#code").val();
+
+            if (in_array(code, mass)) {
+                $('#user_tel').mask("+9(9999) 99-99-99", {});
+            } else {
+                $('#user_tel').mask("+9(99999) 9-99-99", {});
+            }
+        })
+   </script>
+</head>
+<body style="background-color: #d6d8e3">
+
+<h1 align="center" style="color: #2e2c91">Вы вошли первый раз</h1>
+<hr>
+<form action="/logout" method="post" style="text-align: right">
+    <input name="_csrf" type="hidden" value="{{_csrf.token}}">
+    <input class="button button1" style="padding: 10px" type="submit" value="Выйти"/>
+</form>
+<hr>
+<nav>
+    <ul class="topmenu">
+        <li><a class="active">Главная<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/main">На главную<span class="fa fa-angle-down"></span></a>
+                <li><a href="/pdata">Ввод данных пенсионера<span class="fa fa-angle-down"></span></a></li>
+            </ul>
+        <li><a>Работа с переплатами/недоплатами<span class="fa fa-angle-down"></span></a>
+            <ul class="submenu">
+                <li><a href="/pereplats">Расчет суммы переплат</a></li>
+                <li><a href="/mistakes">К причинам переплаты >><span class="fa fa-angle-down"></span></a>
+                    <ul class="submenu">
+                        <li><a href="/pfrmis">Ошибка ПФР<span class="fa fa-angle-down"></span></a>
+                        <li><a href="/pmis">Ошибка пенсионера<span class="fa fa-angle-down"></span></a>
+                    </ul>
+            </ul>
+        <li><a href="/journals">Журналы<span class="fa fa-angle-down"></span></a>
+    </ul>
+</nav>
+<hr>
+<div style="text-align: center; margin:0 auto;">
+    <form action="/phoneadd" method="post" name="data">
+       <input id="code" name="code" type="hidden" value="{{UCODE}}">
+        <h2 align="center" style="color: #2e2c91">Для работы в программном комплексе вам необходимо ввести
+        городской номер телефона</h2>
+        <input id="userid" name="userid" type="hidden" value="{{ID}}">
+        <label>Введите номер телефона: <input class="content" id="user_tel" name="user_tel" type="text"
+                                           required/></label><br><br>
+        <input name="_csrf" type="hidden" value="{{_csrf.token}}"/>
+        <button class="button button1" onclick="if (getElementById('user_tel').value==='') {alert('Заполните все поля'); return false;} else submit(alert('Данные успешно сохранены'));" style="padding: 10px"
+                type="submit">
+            Сохранить Изменения
+        </button>
+    </form>
+</div>
+</body>
+</html>
